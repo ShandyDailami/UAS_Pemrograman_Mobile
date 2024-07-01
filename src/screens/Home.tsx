@@ -7,7 +7,6 @@ const HomeScreen = () => {
     <View>
       <ScrollView>
         <CatList />
-        <Note />
       </ScrollView>
     </View>
   )

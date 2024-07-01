@@ -7,8 +7,8 @@ import { useNavigation } from '@react-navigation/native';
 const Profile = () => {
 
   const [userData, setUserData] = useState({ username: '', name: 'shandy', email: '', phone: '' });
-  const [editMode, setEditMode] = useState(false); // State untuk menentukan apakah sedang dalam mode edit
-  const [editedData, setEditedData] = useState({}); // State untuk menyimpan nilai input yang diedit
+  const [editMode, setEditMode] = useState(false);
+  const [editedData, setEditedData] = useState({});
   const navigation = useNavigation();
 
   useEffect(() => {
@@ -17,7 +17,7 @@ const Profile = () => {
         const jsonValue = await AsyncStorage.getItem('userData');
         const data = JSON.parse(jsonValue);
         setUserData(data);
-        setEditedData(data); // Set nilai awal yang diedit sama dengan data dari AsyncStorage
+        setEditedData(data);
       } catch (error) {
         console.error('Failed to fetch user data from AsyncStorage', error);
       }
@@ -28,25 +28,22 @@ const Profile = () => {
   const handleEditProfile = async () => {
     if (editMode) {
       try {
-        // Simpan perubahan ke AsyncStorage
         await Auth.updateAccount(editedData.name, editedData.username, editedData.email, editedData.phone);
-        setUserData(editedData); // Update userData dengan nilai yang baru diedit
-        setEditMode(false); // Keluar dari mode edit
+        setUserData(editedData);
+        setEditMode(false);
         Alert.alert('Success', 'Profile updated successfully');
       } catch (error) {
         console.error('Failed to update profile', error);
         Alert.alert('Error', 'Failed to update profile');
       }
     } else {
-      // Masuk ke mode edit
       setEditMode(true);
     }
   };
 
   const handleDeleteAccount = async () => {
     if (editMode) {
-      // Jika sedang dalam mode edit, ubah tombol "Delete Account" menjadi "Cancel"
-      setEditMode(false); // Keluar dari mode edit
+      setEditMode(false);
     } else {
       try {
         const deleted = await Auth.deleteAccount();
@@ -63,7 +60,6 @@ const Profile = () => {
     }
   };
 
-  // Fungsi untuk mengubah nilai editedData saat input diubah
   const handleChangeText = (key, value) => {
     setEditedData({ ...editedData, [key]: value });
   };
@@ -125,7 +121,7 @@ const Profile = () => {
             <Text style={styles.buttonText}>{editMode ? 'Submit' : 'Edit'}</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={[styles.button, { backgroundColor: editMode ? '#dc3545' : 'red' }]} onPress={handleDeleteAccount}>
+          <TouchableOpacity style={[styles.button, { backgroundColor: 'red' }]} onPress={handleDeleteAccount}>
             <Text style={styles.buttonText}>{editMode ? 'Cancel' : 'Delete Account'}</Text>
           </TouchableOpacity>
           <TouchableOpacity style={[styles.button, { backgroundColor: 'red' }]} onPress={logout}>
